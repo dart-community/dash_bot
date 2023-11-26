@@ -25,7 +25,7 @@ Searches can be embedded in any text message and their syntax is as follows:
   Flutter's or `package`'s API documentation.
 - `?[Name]` or `?[package/Name]`: Search for `Name` in Flutter's or
   `package`'s API documentation.
-- `\$[name]`: Return the pub.dev page for the package `name`.
+- `$[name]`: Return the pub.dev page for the package `name`.
 - `&[name]`: Search pub.dev for `name`.
 
 ## Running dash_bot
