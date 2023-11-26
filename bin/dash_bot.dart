@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dash_bot/commands/show_lint.dart';
 import 'package:dash_bot/converters/linter_rules.dart';
+import 'package:dash_bot/plugins/dartdoc/plugin.dart';
 import 'package:nyxx/nyxx.dart';
 import 'package:nyxx_commands/nyxx_commands.dart';
 import 'package:nyxx_extensions/nyxx_extensions.dart';
@@ -17,19 +18,15 @@ void main() async {
     ..addConverter(await createLinterRuleConverter())
     ..addCommand(showLint);
 
-  Flags<GatewayIntents> intents = GatewayIntents.allUnprivileged;
-  if (hasPrefix) {
-    intents |= GatewayIntents.messageContent;
-  }
-
   await Nyxx.connectGateway(
     Platform.environment['TOKEN']!,
-    intents,
+    GatewayIntents.allUnprivileged | GatewayIntents.messageContent,
     options: GatewayClientOptions(plugins: [
       logging,
       cliIntegration,
       commands,
       pagination,
+      DartdocSearch(),
     ]),
   );
 }
