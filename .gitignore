@@ -28,7 +28,7 @@ doc/api/
 .flutter-plugins-dependencies
 
 # Generated files
-*.g.dart
+dash_bot.g.dart
 *.exe
 
 # Editor files
