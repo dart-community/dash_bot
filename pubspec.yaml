@@ -8,8 +8,16 @@ environment:
   sdk: ^3.2.0
 
 dependencies:
+  http: ^1.1.1
+  json_annotation: ^4.8.1
   meta: ^1.11.0
+  nyxx: ^6.0.3
+  nyxx_commands: ^6.0.1
+  nyxx_extensions: ^4.1.0
+  recase: ^4.1.0
 
 dev_dependencies:
+  build_runner: ^2.4.6
+  json_serializable: ^6.7.1
   night_raven_insight: ^1.0.0
   test: ^1.24.9
