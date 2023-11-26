@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dash_bot/commands/show_lint.dart';
 import 'package:dash_bot/converters/linter_rules.dart';
 import 'package:dash_bot/plugins/dartdoc/plugin.dart';
+import 'package:dash_bot/plugins/status.dart';
 import 'package:nyxx/nyxx.dart';
 import 'package:nyxx_commands/nyxx_commands.dart';
 import 'package:nyxx_extensions/nyxx_extensions.dart';
@@ -27,6 +28,7 @@ void main() async {
       commands,
       pagination,
       DartdocSearch(),
+      StatusRotate(),
     ]),
   );
 }
