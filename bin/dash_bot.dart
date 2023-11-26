@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dash_bot/commands/ping.dart';
 import 'package:dash_bot/commands/show_lint.dart';
 import 'package:dash_bot/converters/linter_rules.dart';
 import 'package:dash_bot/plugins/dartdoc/plugin.dart';
@@ -17,7 +18,8 @@ void main() async {
 
   commands
     ..addConverter(await createLinterRuleConverter())
-    ..addCommand(showLint);
+    ..addCommand(showLint)
+    ..addCommand(ping);
 
   await Nyxx.connectGateway(
     Platform.environment['TOKEN']!,

@@ -271,8 +271,8 @@ class DartdocSearch extends NyxxPlugin<NyxxGateway> {
                   fields: [
                     for (final result in results)
                       EmbedFieldBuilder(
-                        name:
-                            '${result.type} ${result.name} - ${result.enclosedBy?.type ?? package}',
+                        name: '${result.type} ${result.name} '
+                            '- ${result.enclosedBy?.type ?? package}',
                         value: '$urlBase${result.href}',
                         isInline: false,
                       ),
