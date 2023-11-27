@@ -29,7 +29,7 @@ class _StatusRotateState extends NyxxPluginState<NyxxGateway, StatusRotate> {
   Timer? timer;
   int index = 0;
 
-  Future<void> _updateStatus(NyxxGateway client) async {
+  void _updateStatus(NyxxGateway client) {
     final status = plugin.statuses[index++ % plugin.statuses.length];
 
     client.updatePresence(PresenceBuilder(
@@ -44,8 +44,11 @@ class _StatusRotateState extends NyxxPluginState<NyxxGateway, StatusRotate> {
   @override
   Future<void> afterConnect(NyxxGateway client) async {
     await super.afterConnect(client);
-    await _updateStatus(client);
-    Timer(StatusRotate.updateInterval, () => _updateStatus(client));
+    _updateStatus(client);
+    timer = Timer.periodic(
+      StatusRotate.updateInterval,
+      (_) => _updateStatus(client),
+    );
   }
 
   @override
