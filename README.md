@@ -36,9 +36,10 @@ also optionally set the `PREFIX` environment variable to enable running the
 bot's command using messages like `!ping` instead of Discord's slash commands.
 
 To create an executable, run
-`dart run nyxx_commands:compile -o bin/dash_bot.g.dart bin/dash_bot.dart`. This
-will create an executable at `bin/dash_bot.g.exe` which you can run after
-setting the same environment variables as above.
+`dart run nyxx_commands:compile -o bin/dash_bot.g.dart --no-compile bin/dash_bot.dart`.
+This will create a file at `bin/dash_bot.g.dart` that contains a `main()`
+function and should be used as the entrypoint when compiling `dash_bot` using
+`dart compile ...`.
 
 
 [discord]: https://dartcommunity.dev/discord
