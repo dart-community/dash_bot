@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:http/retry.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:nyxx_commands/nyxx_commands.dart';
 
@@ -21,7 +22,16 @@ Future<List<LinterRule>> _fetchLinterRules() async {
     'raw.githubusercontent.com',
     '/dart-lang/site-www/main/src/_data/linter_rules.json',
   );
-  final data = await http.get(url);
+
+  final data = await http.runWithClient(
+    () => http.get(url),
+    () => RetryClient(
+      http.Client(),
+      retries: 3,
+      when: (response) => response.statusCode != 200,
+    ),
+  );
+
   return List.of(
     (jsonDecode(utf8.decode(data.bodyBytes)) as List)
         .cast<Map<String, Object?>>()
