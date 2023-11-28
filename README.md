@@ -30,10 +30,11 @@ Searches can be embedded in any text message and their syntax is as follows:
 
 ## Running dash_bot
 
-If you can use `dart:mirrors` (i.e during development), simply set the `TOKEN`
-environment variable to your bot's token and run `bin/dash_bot.dart`. You can
-also optionally set the `PREFIX` environment variable to enable running the
-bot's command using messages like `!ping` instead of Discord's slash commands.
+If you can use `dart:mirrors` (i.e during development), simply set the
+`BOT_TOKEN` environment variable to your bot's token and run
+`bin/dash_bot.dart`. You can also optionally set the `BOT_PREFIX` environment
+variable to enable running the bot's command using messages like `!ping`
+instead of Discord's slash commands.
 
 To create an executable, run
 `dart run nyxx_commands:compile -o bin/dash_bot.g.dart --no-compile bin/dash_bot.dart`.

@@ -9,11 +9,22 @@ import 'package:nyxx/nyxx.dart';
 import 'package:nyxx_commands/nyxx_commands.dart';
 import 'package:nyxx_extensions/nyxx_extensions.dart';
 
+const botPrefixEnv = 'BOT_PREFIX';
+const botTokenEnv = 'BOT_TOKEN';
+
 void main() async {
-  final hasPrefix = Platform.environment.containsKey('PREFIX');
+  final botToken = Platform.environment[botTokenEnv];
+  if (botToken == null) {
+    throw Exception(
+      'A Discord bot token must be provided using the $botTokenEnv environment'
+      ' variable',
+    );
+  }
+
+  final botPrefix = Platform.environment[botPrefixEnv];
 
   final commands = CommandsPlugin(
-    prefix: hasPrefix ? (_) => Platform.environment['PREFIX']! : null,
+    prefix: botPrefix == null ? null : (_) => botPrefix,
   );
 
   commands
@@ -22,7 +33,7 @@ void main() async {
     ..addCommand(ping);
 
   await Nyxx.connectGateway(
-    Platform.environment['TOKEN']!,
+    botToken,
     GatewayIntents.allUnprivileged | GatewayIntents.messageContent,
     options: GatewayClientOptions(plugins: [
       logging,
