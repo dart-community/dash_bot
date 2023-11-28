@@ -186,7 +186,7 @@ class DartdocSearch extends NyxxPlugin<NyxxGateway> {
       double getWeight(String type) => switch (type) {
             // Make classes more likely to appear than constructors or
             // libraries with the same name.
-            'class_' => 1.1,
+            'class' => 1.1,
             _ => 1,
           };
 

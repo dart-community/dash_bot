@@ -72,29 +72,37 @@ class DartdocEnclosedBy {
       _$DartdocEnclosedByFromJson(json);
 }
 
-String _typeFromJson(int kind) => [
-      // https://pub.dev/documentation/dartdoc/latest/dartdoc/Kind.html
-      'accessor',
-      'constant',
-      'constructor',
-      'class_',
-      'dynamic',
-      'enum_',
-      'extension',
-      'extensionType',
-      'function',
-      'library',
-      'method',
-      'mixin',
-      'never',
-      'package',
-      'parameter',
-      'prefix',
-      'property',
-      'sdk',
-      'topic',
-      'topLevelConstant',
-      'topLevelProperty',
-      'typedef',
-      'typeParameter',
-    ][kind];
+String _typeFromJson(int kind) {
+  const types = [
+    // https://pub.dev/documentation/dartdoc/latest/dartdoc/Kind.html
+    'accessor',
+    'constant',
+    'constructor',
+    'class',
+    'dynamic',
+    'enum',
+    'extension',
+    'extensionType',
+    'function',
+    'library',
+    'method',
+    'mixin',
+    'never',
+    'package',
+    'parameter',
+    'prefix',
+    'property',
+    'sdk',
+    'topic',
+    'topLevelConstant',
+    'topLevelProperty',
+    'typedef',
+    'typeParameter',
+  ];
+
+  if (kind >= 0 && kind < types.length) {
+    return types[kind];
+  }
+
+  return 'unknown';
+}
