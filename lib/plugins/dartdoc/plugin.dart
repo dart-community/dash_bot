@@ -163,6 +163,42 @@ class DartdocSearch extends NyxxPlugin<NyxxGateway> {
     return results;
   }
 
+  /// Returns a list containing the same elements as [entries], but sorting
+  /// according to how relevant they are to [query].
+  ///
+  /// Elements most relevant to [query] appear first in the returned list.
+  Future<List<DartdocEntry>> sortByQuery(
+    String query,
+    List<DartdocEntry> entries, {
+    required bool byName,
+  }) {
+    return Isolate.run(() {
+      final results = List.of(entries.map(
+        (e) => (
+          lehvenstein(
+            query,
+            (byName ? e.name : e.qualifiedName).toLowerCase(),
+          ),
+          e,
+        ),
+      ));
+
+      double getWeight(String type) => switch (type) {
+            // Make classes more likely to appear than constructors or
+            // libraries with the same name.
+            'class_' => 1.1,
+            _ => 1,
+          };
+
+      // +1 so that exact matches (distance of 0) still get weighted.
+      results.sort(
+        (a, b) => ((a.$1 + 1) / getWeight(a.$2.type))
+            .compareTo((b.$1 + 1) / getWeight(b.$2.type)),
+      );
+      return List.of(results.map((e) => e.$2));
+    });
+  }
+
   @override
   void afterConnect(NyxxGateway client) {
     final parser = SearchGrammar().build<List<Search>>();
@@ -196,43 +232,7 @@ class DartdocSearch extends NyxxPlugin<NyxxGateway> {
           final query = search.name;
           final byName = useNamePattern.hasMatch(search.name);
 
-          // lehvenstein can block, especially if we are searching the Flutter
-          // docs (80k+ calls). We need to move the isolate creation to a
-          // different function to avoid capturing `this` in the closure
-          // context.
-          Future<List<DartdocEntry>> process(
-            String query,
-            List<DartdocEntry> entries, {
-            required bool byName,
-          }) {
-            return Isolate.run(() {
-              final results = List.of(entries.map(
-                (e) => (
-                  lehvenstein(
-                    query,
-                    (byName ? e.name : e.qualifiedName).toLowerCase(),
-                  ),
-                  e,
-                ),
-              ));
-
-              double getWeight(String type) => switch (type) {
-                    // Make classes more likely to appear than constructors or
-                    // libraries with the same name.
-                    'class_' => 1.1,
-                    _ => 1,
-                  };
-
-              // +1 so that exact matches (distance of 0) still get weighted.
-              results.sort(
-                (a, b) => ((a.$1 + 1) / getWeight(a.$2.type))
-                    .compareTo((b.$1 + 1) / getWeight(b.$2.type)),
-              );
-              return List.of(results.map((e) => e.$2));
-            });
-          }
-
-          final results = await process(
+          final results = await sortByQuery(
             query.toLowerCase(),
             entries,
             byName: byName,
