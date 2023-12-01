@@ -13,7 +13,7 @@ import 'search_grammar.dart';
 /// Returns the Levenshtein distance between two [String]s.
 ///
 /// Adapted from https://en.wikipedia.org/wiki/Levenshtein_distance#Iterative_with_two_matrix_rows
-int lehvenstein(String s, String t) {
+int _lehvenstein(String s, String t) {
   final m = s.length;
   final n = t.length;
 
@@ -101,24 +101,24 @@ class DartdocSearch extends NyxxPlugin<NyxxGateway> {
   /// resolved.
   /// `entries` is a list of [DartdocEntry] in the package's documentation.
   Future<(String, List<DartdocEntry>)> getEntries(String package) async {
-    final cached = _documentationCache[package];
+    final trimmedPackage = package.toLowerCase().trim();
     final now = DateTime.timestamp();
-    final cacheExpiry = now.add(-expireDuration);
 
-    final urlBase = package == 'flutter' || package == 'dart'
+    final urlBase = trimmedPackage == 'flutter' || trimmedPackage == 'dart'
         ? 'https://api.flutter.dev/flutter/'
-        : 'https://pub.dev/documentation/$package/latest/';
+        : 'https://pub.dev/documentation/$trimmedPackage/latest/';
+
+    if (_documentationCache[trimmedPackage] case (final time, final entries)
+        when time.isAfter(now.add(-expireDuration))) {
+      return (urlBase, entries);
+    }
 
     final url = '${urlBase}index.json';
 
-    if (cached != null && cached.$1.isAfter(cacheExpiry)) {
-      return (urlBase, cached.$2);
-    }
-
-    logger.info('Updating documentation cache for $package');
+    logger.info('Updating documentation cache for $trimmedPackage');
 
     final response = await http.get(Uri.parse(url));
-    if (response.statusCode != 200) return (urlBase, <DartdocEntry>[]);
+    if (response.statusCode != 200) return (urlBase, const <DartdocEntry>[]);
 
     final content = jsonDecode(utf8.decode(response.bodyBytes)) as List;
 
@@ -127,7 +127,7 @@ class DartdocSearch extends NyxxPlugin<NyxxGateway> {
         if (!map.containsKey('__PACKAGE_ORDER__')) DartdocEntry.fromJson(map),
     ];
 
-    _documentationCache[package] = (now, entries);
+    _documentationCache[trimmedPackage] = (now, entries);
     return (urlBase, entries);
   }
 
@@ -135,23 +135,25 @@ class DartdocSearch extends NyxxPlugin<NyxxGateway> {
 
   /// Search for packages based on [query] on https://pub.dev.
   Future<List<String>> searchPackages(String query) async {
+    final trimmedQuery = query.toLowerCase().trim();
+
     // Most common case.
-    if (query == 'flutter') return ['flutter'];
+    if (trimmedQuery == 'flutter') return ['flutter'];
 
     // A cache isn't really needed here (since the most common case by far is
     // hard coded above) but it avoids triggering multiple requests when a
     // package's documentation is referenced multiple times in one message.
-    final cached = _searchCache[query];
     final now = DateTime.timestamp();
-    final cacheExpiry = now.add(-expireDuration);
-
-    if (cached != null && cached.$1.isAfter(cacheExpiry)) {
-      return cached.$2;
+    if (_searchCache[trimmedQuery] case (final time, final packages)
+        when time.isAfter(now.add(-expireDuration))) {
+      return packages;
     }
 
     final response = await http.get(
-      Uri.https('pub.dev', '/api/search', {'q': query}),
+      Uri.https('pub.dev', '/api/search', {'q': trimmedQuery}),
     );
+    if (response.statusCode != 200) return const [];
+
     final content = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
 
     final results = (content['packages'] as List)
@@ -159,7 +161,7 @@ class DartdocSearch extends NyxxPlugin<NyxxGateway> {
         .map((e) => e['package'] as String)
         .toList(growable: false);
 
-    _searchCache[query] = (now, results);
+    _searchCache[trimmedQuery] = (now, results);
     return results;
   }
 
@@ -175,7 +177,7 @@ class DartdocSearch extends NyxxPlugin<NyxxGateway> {
     return Isolate.run(() {
       final results = List.of(entries.map(
         (e) => (
-          lehvenstein(
+          _lehvenstein(
             query,
             (byName ? e.name : e.qualifiedName).toLowerCase(),
           ),
