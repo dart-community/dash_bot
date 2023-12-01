@@ -159,6 +159,7 @@ class DartdocSearch extends NyxxPlugin<NyxxGateway> {
     final results = (content['packages'] as List)
         .cast<Map<String, Object?>>()
         .map((e) => e['package'] as String)
+        .take(10)
         .toList(growable: false);
 
     _searchCache[trimmedQuery] = (now, results);
@@ -271,7 +272,7 @@ class DartdocSearch extends NyxxPlugin<NyxxGateway> {
                 EmbedBuilder(
                   title: 'Pub Search Results - ${search.name}',
                   fields: [
-                    for (final result in results)
+                    for (final result in results.take(10))
                       EmbedFieldBuilder(
                         name: '${result.type} ${result.name} '
                             '- ${result.enclosedBy?.type ?? package}',
