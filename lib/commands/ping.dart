@@ -1,8 +1,9 @@
 import 'package:nyxx/nyxx.dart';
 import 'package:nyxx_commands/nyxx_commands.dart';
 
-/// Displays the client's latency metrics. Can be used as a simple connectivity
-/// test.
+/// Displays the client's latency metrics.
+///
+/// Can be used as a simple connectivity test.
 final ping = ChatCommand(
   'ping',
   'Check the bot is online',
