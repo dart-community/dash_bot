@@ -6,16 +6,17 @@ import 'package:nyxx/nyxx.dart';
 /// on Discord.
 class StatusRotate extends NyxxPlugin<NyxxGateway> {
   /// The time for which each status is shown.
-  static const updateInterval = Duration(seconds: 30);
+  static const updateInterval = Duration(minutes: 3);
 
   /// The statuses that can be shown.
-  // TODO(abitofevrything): Find some better statuses.
   final statuses = <String>[
-    'Chasing hummingbirds',
-    'Fluttering around',
-    'Dashing forwards',
-    'Loving Dart',
-    'Looking for Mega-Dash',
+    'Playing Super Dash!',
+    'Trying to understand zones...',
+    'Fluttering around :D',
+    'Dashing forwards!',
+    'Loving Dart!',
+    'Looking for Mega-Dash 👀',
+    'Launching isolates!',
   ];
 
   @override
