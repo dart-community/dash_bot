@@ -8,8 +8,6 @@ import 'package:nyxx_commands/nyxx_commands.dart';
 part 'linter_rules.g.dart';
 
 /// Creates a converter for lint rules from https://dart.dev/tools/linter-rules.
-// TODO(abitofevrything): Only fetches lints once when this is called.
-// If lints are added, the bot must be restarted.
 Future<SimpleConverter<LinterRule>> createLinterRuleConverter() async {
   return SimpleConverter.fixed(
     elements: await _fetchLinterRules(),
@@ -32,11 +30,16 @@ Future<List<LinterRule>> _fetchLinterRules() async {
     ),
   );
 
-  return List.of(
-    (jsonDecode(utf8.decode(data.bodyBytes)) as List)
-        .cast<Map<String, Object?>>()
-        .map(LinterRule.fromJson),
-  );
+  // If we didn't successfully get the linter rules,
+  // fall back to an empty list.
+  if (data.statusCode != 200) {
+    return [];
+  }
+
+  return (jsonDecode(utf8.decode(data.bodyBytes)) as List)
+      .cast<Map<String, Object?>>()
+      .map(LinterRule.fromJson)
+      .toList(growable: false);
 }
 
 /// Information about a Dart linter rule.

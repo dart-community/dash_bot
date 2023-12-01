@@ -157,7 +157,7 @@ class DartdocSearch extends NyxxPlugin<NyxxGateway> {
     final results = (content['packages'] as List)
         .cast<Map<String, Object?>>()
         .map((e) => e['package'] as String)
-        .toList();
+        .toList(growable: false);
 
     _searchCache[query] = (now, results);
     return results;
