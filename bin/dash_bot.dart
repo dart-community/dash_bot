@@ -25,12 +25,87 @@ void main() async {
 
   final commands = CommandsPlugin(
     prefix: botPrefix == null ? null : (_) => botPrefix,
+    // We have our own error handler that logs errors
+    options: const CommandsOptions(logErrors: false),
   );
 
   commands
     ..addConverter(await createLinterRuleConverter())
     ..addCommand(showLint)
     ..addCommand(ping);
+
+  pagination.onDisallowedUse.listen((event) async {
+    await event.interaction.respond(
+      isEphemeral: true,
+      MessageBuilder(
+        content: 'Sorry, changing pages is reserved for the user who ran the'
+            ' command. Run the same command yourself if you want to paginate'
+            ' through the output.',
+      ),
+    );
+  });
+
+  pagination.onUnhandledInteraction.listen((event) async {
+    await event.interaction.respond(
+      isEphemeral: true,
+      MessageBuilder(
+        content: 'Sorry, these controls no longer work. Run the command again'
+            ' to get working controls.',
+      ),
+    );
+  });
+
+  commands.onCommandError.listen((error) async {
+    // Check the error was thrown from a context we can respond to
+    // (an `InteractiveContext`).
+    if (error case ContextualException(:final InteractiveContext context)) {
+      if (error is BadInputException) {
+        await context.respond(
+          level: ResponseLevel.hint,
+          MessageBuilder(
+            content:
+                'Invalid input. Check your command arguments and try again.',
+          ),
+        );
+      } else if (error is UnhandledInteractionException) {
+        await context.respond(
+          level: ResponseLevel.hint,
+          MessageBuilder(
+            content: 'Sorry, this component no longer works.'
+                ' Try running the command again.',
+          ),
+        );
+      } else if (error is CheckFailedException) {
+        await context.respond(
+          level: ResponseLevel.hint,
+          MessageBuilder(
+            content: "Sorry, you can't use this command right now.",
+          ),
+        );
+      } else if (error is UncaughtException) {
+        final exception = error.exception;
+
+        // TODO(abitofevrything): Add specific responses for specific errors as
+        // we encounter them.
+
+        await context.respond(
+          level: ResponseLevel.hint,
+          MessageBuilder(
+            content: 'An unknown error occurred while running your command.'
+                ' Try running the command again.',
+          ),
+        );
+
+        commands.logger.shout(
+          'Unhandled user-facing exception',
+          exception,
+          error.stackTrace,
+        );
+      }
+    } else {
+      commands.logger.warning('Unhandled exception', error, error.stackTrace);
+    }
+  });
 
   await Nyxx.connectGateway(
     botToken,
