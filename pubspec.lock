@@ -349,10 +349,10 @@ packages:
     dependency: "direct main"
     description:
       name: nyxx_commands
-      sha256: ebdeefce5d494803003a06a4b25e763030f24c5996f07e686374fccf58bdc37c
+      sha256: "5465f60e673730076c6dad4c4c94be704f0682bab70fc221269f0ad4b1026faf"
       url: "https://pub.dev"
     source: hosted
-    version: "6.0.2"
+    version: "6.0.3"
   nyxx_extensions:
     dependency: "direct main"
     description:
