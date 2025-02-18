@@ -341,10 +341,10 @@ packages:
     dependency: "direct main"
     description:
       name: nyxx
-      sha256: "67b49813cb5a7d36cf0b1e1f3bfe9a28c5f3056f75f5fb43672666d9d0eb1aa4"
+      sha256: "3ee891f4098c0dd7b992dafc2b4e961b82bd076b3149a15408efda1e11c7c5aa"
       url: "https://pub.dev"
     source: hosted
-    version: "6.3.0"
+    version: "6.5.2"
   nyxx_commands:
     dependency: "direct main"
     description:
@@ -357,10 +357,10 @@ packages:
     dependency: "direct main"
     description:
       name: nyxx_extensions
-      sha256: "8ba75eeb0a8034df1e549170e69d11961a93352d9b043db08014038c4ee938aa"
+      sha256: "12193e4214385a3b54eec8be22d0b3ebf474c08a16b3b1b639c08afb0d2b2d04"
       url: "https://pub.dev"
     source: hosted
-    version: "4.1.0"
+    version: "4.3.0"
   oauth2:
     dependency: transitive
     description:
