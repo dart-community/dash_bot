@@ -14,7 +14,7 @@ dependencies:
   nyxx: ^6.2.1
   nyxx_commands: ^6.0.2
   nyxx_extensions: ^4.1.0
-  petitparser: ^6.0.2
+  petitparser: ^7.0.0
   recase: ^4.1.0
 
 dev_dependencies:
