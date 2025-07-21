@@ -157,10 +157,10 @@ packages:
     dependency: transitive
     description:
       name: dart_flutter_team_lints
-      sha256: "78be5f4105d7aaabfe9a9fb48b178f5cd66e041b03cb8ad745392d4534a52603"
+      sha256: ce0f23e2cf95cbd21766d17a7cf88584758b67fd77338d61f2ce77e3cf6d763c
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.0"
+    version: "3.5.2"
   dart_style:
     dependency: transitive
     description:
@@ -285,10 +285,10 @@ packages:
     dependency: transitive
     description:
       name: lints
-      sha256: "976c774dd944a42e83e2467f4cc670daef7eed6295b10b36ae8c85bcbf828235"
+      sha256: a5e2b223cb7c9c8efdc663ef484fdd95bb243bff242ef5b13e26883547fce9a0
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.0"
+    version: "6.0.0"
   logging:
     dependency: transitive
     description:
@@ -325,10 +325,10 @@ packages:
     dependency: "direct dev"
     description:
       name: night_raven_insight
-      sha256: "94c4fecf564efe58016fe7cbecd8960bc5a6b1b8ba6134667f91a9a1b0fbc65c"
+      sha256: e24fab5db6f5cbbcc97572e53bd35b14385c00838e3a51b67dc95354e9fd7c40
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.0"
+    version: "4.0.0"
   node_preamble:
     dependency: transitive
     description:
